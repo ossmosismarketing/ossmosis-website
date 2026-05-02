@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ossmosis Marketing</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --purple: #7C3AED; --purple-light: #9D5CF5; --purple-dark: #5B21B6;
+    --black: #0A0A0A; --dark: #111111; --dark2: #1A1A1A;
+    --text: #E8E8E8; --muted: #999; --white: #ffffff; --accent: #C084FC;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family: 'Outfit', sans-serif; background: var(--black); color: var(--text); overflow-x: hidden; }
+
+  .top-bar { background: var(--purple-dark); padding: 0.4rem 2rem; display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; font-size: 0.78rem; color: rgba(255,255,255,0.85); }
+  .top-bar a { color: rgba(255,255,255,0.9); text-decoration: none; }
+  .top-bar a:hover { color: white; }
+  .top-bar span { opacity: 0.5; }
+
+  nav { position: sticky; top: 0; z-index: 100; background: rgba(10,10,10,0.97); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(124,58,237,0.3); padding: 0 2rem; height: 68px; display: flex; align-items: center; justify-content: space-between; }
+  .logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; color: var(--white); letter-spacing: 4px; cursor: pointer; }
+  .logo span { color: var(--purple-light); }
+  .nav-pages { display: flex; gap: 0.4rem; }
+  .nav-page-btn { background: transparent; border: 1px solid rgba(124,58,237,0.2); color: var(--muted); padding: 0.5rem 1.1rem; border-radius: 6px; font-family: 'Outfit', sans-serif; font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+  .nav-page-btn:hover { background: rgba(124,58,237,0.15); border-color: rgba(124,58,237,0.5); color: var(--white); }
+  .nav-page-btn.active { background: var(--purple); border-color: var(--purple); color: white; }
+  .nav-cta { background: var(--purple); color: white; padding: 0.55rem 1.3rem; border-radius: 6px; font-weight: 700; font-size: 0.82rem; text-decoration: none; transition: background 0.2s; white-space: nowrap; border: none; cursor: pointer; font-family: 'Outfit', sans-serif; }
+  .nav-cta:hover { background: var(--purple-light); }
+  .nav-mobile { display: none; }
+  @media (max-width: 768px) {
+    .nav-pages { display: none; }
+    .nav-mobile { display: flex; gap: 0.3rem; }
+    .nav-mobile-btn { background: rgba(124,58,237,0.15); border: 1px solid rgba(124,58,237,0.3); color: var(--muted); padding: 0.4rem 0.6rem; border-radius: 5px; font-size: 0.7rem; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: 'Outfit', sans-serif; }
+    .nav-mobile-btn.active { background: var(--purple); border-color: var(--purple); color: white; }
+  }
+
+  .page { display: none; min-height: 100vh; }
+  .page.active { display: block; }
+
+  .hero { position: relative; padding: 6rem 2rem 5rem; background: linear-gradient(135deg, #0A0A0A 0%, #1a0a2e 50%, #0A0A0A 100%); overflow: hidden; text-align: center; }
+  .hero::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(ellipse at 60% 40%, rgba(124,58,237,0.15) 0%, transparent 60%); pointer-events: none; }
+  .hero-tag { display: inline-block; background: rgba(124,58,237,0.2); border: 1px solid rgba(124,58,237,0.4); color: var(--purple-light); padding: 0.35rem 1rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1.5rem; }
+  .hero h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(3rem, 8vw, 6rem); line-height: 1; color: var(--white); margin-bottom: 1.5rem; letter-spacing: 2px; }
+  .hero h1 span { color: var(--purple-light); }
+  .hero p { font-size: 1.1rem; color: var(--muted); max-width: 600px; margin: 0 auto 2.5rem; line-height: 1.7; }
+  .hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  .btn-primary { background: var(--purple); color: white; padding: 0.9rem 2.2rem; border-radius: 6px; font-weight: 700; font-size: 1rem; text-decoration: none; transition: all 0.2s; letter-spacing: 1px; border: none; cursor: pointer; font-family: 'Outfit', sans-serif; }
+  .btn-primary:hover { background: var(--purple-light); transform: translateY(-2px); box-shadow: 0 8px 25px rgba(124,58,237,0.4); }
+  .btn-outline { background: transparent; color: var(--text); padding: 0.9rem 2.2rem; border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; font-weight: 600; font-size: 1rem; text-decoration: none; transition: all 0.2s; cursor: pointer; font-family: 'Outfit', sans-serif; }
+  .btn-outline:hover { border-color: var(--purple-light); color: var(--purple-light); }
+
+  section { padding: 5rem 2rem; }
+  .container { max-width: 1100px; margin: 0 auto; }
+  .section-tag { display: inline-block; background: rgba(124,58,237,0.15); border: 1px solid rgba(124,58,237,0.3); color: var(--purple-light); padding: 0.3rem 0.9rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1rem; }
+  .section-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2rem, 5vw, 3.5rem); color: var(--white); letter-spacing: 2px; margin-bottom: 1rem; }
+  .section-subtitle { color: var(--muted); font-size: 1.05rem; line-height: 1.7; max-width: 650px; }
+  .section-header { text-align: center; margin-bottom: 3.5rem; }
+  .section-header .section-subtitle { margin: 0 auto; }
+  .bg-alt { background: var(--dark); }
+
+  .why-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+  .why-card { background: var(--dark2); border: 1px solid rgba(124,58,237,0.15); border-radius: 12px; padding: 2rem; transition: border-color 0.2s, transform 0.2s; }
+  .why-card:hover { border-color: rgba(124,58,237,0.5); transform: translateY(-4px); }
+  .why-icon { font-size: 2rem; margin-bottom: 1rem; }
+  .why-card h3 { font-size: 1.1rem; color: var(--white); font-weight: 700; margin-bottom: 0.5rem; }
+  .why-card p { color: var(--muted); font-size: 0.9rem; line-height: 1.6; }
+
+  .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+  .plan-card { background: var(--dark2); border: 1px solid rgba(124,58,237,0.15); border-radius: 16px; padding: 2.5rem; position: relative; transition: all 0.2s; }
+  .plan-card:hover { border-color: rgba(124,58,237,0.5); transform: translateY(-4px); }
+  .plan-card.featured { border-color: var(--purple); background: linear-gradient(135deg, rgba(124,58,237,0.1), rgba(10,10,10,0.9)); }
+  .featured-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--purple); color: white; padding: 0.25rem 1rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; white-space: nowrap; }
+  .plan-name { font-size: 0.85rem; font-weight: 600; color: var(--purple-light); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 0.5rem; }
+  .plan-price { font-family: 'Bebas Neue', sans-serif; font-size: 3.5rem; color: var(--white); letter-spacing: 2px; line-height: 1; }
+  .plan-desc { color: var(--muted); font-size: 0.9rem; margin: 0.75rem 0 1.5rem; line-height: 1.5; }
+  .plan-features { list-style: none; margin-bottom: 2rem; }
+  .plan-features li { padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 0.9rem; color: var(--text); display: flex; gap: 0.6rem; align-items: center; }
+  .plan-features li::before { content: '✓'; color: var(--purple-light); font-weight: 700; flex-shrink: 0; }
+  .plan-features li.no::before { content: '✗'; color: #555; }
+  .plan-features li.no { color: #555; }
+  .plan-features li.maint { margin-top: 0.4rem; border-top: 1px solid rgba(124,58,237,0.25); border-bottom: none; background: rgba(124,58,237,0.08); border-radius: 6px; padding: 0.6rem 0.75rem; color: var(--accent); font-weight: 600; }
+  .plan-features li.maint::before { content: '🔧'; color: unset; font-size: 0.85rem; }
+  .plan-btn { display: block; text-align: center; background: var(--purple); color: white; padding: 0.85rem; border-radius: 8px; font-weight: 700; text-decoration: none; transition: all 0.2s; font-size: 0.95rem; }
+  .plan-btn:hover { background: var(--purple-light); }
+  .plan-card.featured .plan-btn { background: var(--white); color: var(--black); }
+  .plan-card.featured .plan-btn:hover { background: var(--accent); }
+
+  .process-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+  .process-step { padding: 2rem; text-align: center; position: relative; }
+  .step-num { font-family: 'Bebas Neue', sans-serif; font-size: 4rem; color: rgba(124,58,237,0.15); line-height: 1; position: absolute; top: 1rem; right: 1.5rem; }
+  .step-icon { font-size: 2rem; margin-bottom: 1rem; }
+  .process-step h3 { color: var(--white); font-weight: 700; margin-bottom: 0.5rem; }
+  .process-step p { color: var(--muted); font-size: 0.85rem; line-height: 1.6; }
+  .process-cta { margin-top: 2.5rem; padding: 2rem; background: linear-gradient(135deg, rgba(124,58,237,0.15), rgba(91,33,182,0.1)); border: 1px solid rgba(124,58,237,0.3); border-radius: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem; }
+  .process-cta-text h3 { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; color: var(--white); letter-spacing: 2px; margin-bottom: 0.3rem; }
+  .process-cta-text p { color: var(--muted); font-size: 0.9rem; }
+  .process-cta-btn { background: var(--purple); color: white; padding: 0.9rem 2rem; border-radius: 8px; font-weight: 700; font-size: 1rem; text-decoration: none; transition: all 0.2s; white-space: nowrap; }
+  .process-cta-btn:hover { background: var(--purple-light); transform: translateY(-2px); }
+
+  .stats-row { display: flex; flex-wrap: wrap; gap: 0; background: var(--dark2); border: 1px solid rgba(124,58,237,0.15); border-radius: 12px; overflow: hidden; margin: 3rem 0; }
+  .stat-item { flex: 1; min-width: 150px; padding: 2rem; text-align: center; border-right: 1px solid rgba(124,58,237,0.1); }
+  .stat-item:last-child { border-right: none; }
+  .stat-num { font-family: 'Bebas Neue', sans-serif; font-size: 3rem; color: var(--purple-light); line-height: 1; }
+  .stat-label { font-size: 0.8rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 0.3rem; }
+
+  .testi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+  .testi-card { background: var(--dark2); border: 1px solid rgba(124,58,237,0.1); border-radius: 12px; padding: 2rem; }
+  .stars { color: #FBBF24; font-size: 0.9rem; margin-bottom: 1rem; }
+  .testi-card p { color: var(--text); font-size: 0.9rem; line-height: 1.7; margin-bottom: 1.5rem; font-style: italic; }
+  .testi-author { display: flex; align-items: center; gap: 1rem; }
+  .testi-avatar { width: 40px; height: 40px; background: var(--purple); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1rem; color: white; flex-shrink: 0; }
+  .testi-name { color: var(--white); font-weight: 700; font-size: 0.9rem; }
+  .testi-biz { color: var(--muted); font-size: 0.8rem; }
+
+  .wrap-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; }
+  .wrap-card { background: var(--dark2); border: 1px solid rgba(124,58,237,0.1); border-radius: 12px; overflow: hidden; transition: all 0.2s; }
+  .wrap-card:hover { border-color: rgba(124,58,237,0.5); transform: translateY(-4px); }
+  .wrap-img { height: 180px; display: flex; align-items: center; justify-content: center; font-size: 4rem; }
+  .wrap-img.basic { background: linear-gradient(135deg, #1a1a1a, #2a1a4a); }
+  .wrap-img.partial { background: linear-gradient(135deg, #1a1a3a, #3a1a6a); }
+  .wrap-img.full { background: linear-gradient(135deg, #2a0a4a, #5a1a8a); }
+  .wrap-img.deluxe { background: linear-gradient(135deg, #3a0a5a, #7a1aaa); }
+  .wrap-body { padding: 1.5rem; }
+  .wrap-badge { font-size: 0.7rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--purple-light); margin-bottom: 0.5rem; }
+  .wrap-body h3 { color: var(--white); font-size: 1.2rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .wrap-body p { color: var(--muted); font-size: 0.88rem; line-height: 1.6; margin-bottom: 1rem; }
+  .wrap-includes { list-style: none; }
+  .wrap-includes li { font-size: 0.82rem; color: var(--text); padding: 0.25rem 0; display: flex; gap: 0.5rem; }
+  .wrap-includes li::before { content: '→'; color: var(--purple-light); }
+
+  .wrap-table-wrap { overflow-x: auto; margin-top: 3rem; }
+  .wrap-table { width: 100%; border-collapse: collapse; min-width: 600px; }
+  .wrap-table th { background: var(--purple); color: white; padding: 1rem; font-size: 0.85rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; text-align: left; }
+  .wrap-table th:first-child { border-radius: 8px 0 0 0; }
+  .wrap-table th:last-child { border-radius: 0 8px 0 0; }
+  .wrap-table td { padding: 0.9rem 1rem; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 0.9rem; }
+  .wrap-table tr:nth-child(even) td { background: rgba(124,58,237,0.04); }
+  .wrap-table .check { color: #6ee7b7; font-weight: 700; }
+  .wrap-table .cross { color: #555; }
+  .wrap-table .plan-col { color: var(--white); font-weight: 700; }
+
+  .video-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+  .video-card { background: var(--dark2); border: 1px solid rgba(124,58,237,0.1); border-radius: 12px; overflow: hidden; transition: all 0.2s; }
+  .video-card:hover { border-color: rgba(124,58,237,0.4); transform: translateY(-3px); }
+  .video-thumb { height: 180px; display: flex; align-items: center; justify-content: center; position: relative; cursor: pointer; }
+  .video-thumb.rest { background: linear-gradient(135deg, #0a1a0a, #1a3a1a); }
+  .video-thumb.barber { background: linear-gradient(135deg, #1a0a1a, #3a1a3a); }
+  .video-thumb.retail { background: linear-gradient(135deg, #0a0a1a, #1a1a3a); }
+  .video-thumb.event { background: linear-gradient(135deg, #1a1a0a, #3a3a0a); }
+  .play-btn { width: 56px; height: 56px; background: rgba(124,58,237,0.9); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; transition: transform 0.2s; }
+  .video-card:hover .play-btn { transform: scale(1.1); background: var(--purple); }
+  .video-label { position: absolute; bottom: 0.75rem; left: 0.75rem; background: rgba(0,0,0,0.7); color: var(--accent); padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600; letter-spacing: 1px; }
+  .video-info { padding: 1.25rem; }
+  .video-info h3 { color: var(--white); font-weight: 700; margin-bottom: 0.3rem; font-size: 1rem; }
+  .video-info p { color: var(--muted); font-size: 0.85rem; }
+
+  .photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem; }
+  .photo-item { border-radius: 10px; overflow: hidden; position: relative; aspect-ratio: 4/3; cursor: pointer; }
+  .photo-item div:first-child { width: 100%; height: 100%; transition: transform 0.3s; display: flex; align-items: center; justify-content: center; font-size: 3rem; }
+  .photo-item:hover div:first-child { transform: scale(1.05); }
+  .photo-item.r1 div:first-child { background: linear-gradient(135deg, #0f2d0f, #1a5c1a); }
+  .photo-item.r2 div:first-child { background: linear-gradient(135deg, #2d1a0f, #5c3a1a); }
+  .photo-item.r3 div:first-child { background: linear-gradient(135deg, #0f0f2d, #1a1a5c); }
+  .photo-item.r4 div:first-child { background: linear-gradient(135deg, #2d0f2d, #5c1a5c); }
+  .photo-item.r5 div:first-child { background: linear-gradient(135deg, #2d2d0f, #5c5c1a); }
+  .photo-item.r6 div:first-child { background: linear-gradient(135deg, #0f2d2d, #1a5c5c); }
+  .photo-overlay { position: absolute; inset: 0; background: rgba(124,58,237,0); transition: background 0.2s; }
+  .photo-item:hover .photo-overlay { background: rgba(124,58,237,0.3); }
+
+  .portfolio-tabs { display: flex; gap: 0.75rem; flex-wrap: wrap; justify-content: center; margin-bottom: 3rem; }
+  .tab-btn { background: var(--dark2); border: 1px solid rgba(124,58,237,0.2); color: var(--muted); padding: 0.6rem 1.5rem; border-radius: 30px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.2s; letter-spacing: 1px; font-family: 'Outfit', sans-serif; }
+  .tab-btn:hover, .tab-btn.active { background: var(--purple); border-color: var(--purple); color: white; }
+  .portfolio-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
+  .portfolio-item { background: var(--dark2); border: 1px solid rgba(124,58,237,0.1); border-radius: 12px; overflow: hidden; transition: all 0.2s; }
+  .portfolio-item:hover { border-color: rgba(124,58,237,0.5); transform: translateY(-4px); }
+  .portfolio-thumb { height: 200px; display: flex; align-items: center; justify-content: center; font-size: 3.5rem; }
+  .pt-web { background: linear-gradient(135deg, #0a1a3a, #1a2a5a); }
+  .pt-wrap { background: linear-gradient(135deg, #1a0a3a, #3a1a5a); }
+  .pt-mkt { background: linear-gradient(135deg, #0a2a1a, #1a4a2a); }
+  .portfolio-info { padding: 1.5rem; }
+  .portfolio-cat { font-size: 0.7rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--purple-light); margin-bottom: 0.4rem; }
+  .portfolio-info h3 { color: var(--white); font-weight: 700; font-size: 1rem; margin-bottom: 0.3rem; }
+  .portfolio-info p { color: var(--muted); font-size: 0.85rem; }
+
+  .cta-band { background: linear-gradient(135deg, var(--purple-dark), var(--purple)); padding: 4rem 2rem; text-align: center; }
+  .cta-band h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2rem,5vw,3.5rem); color: white; margin-bottom: 1rem; letter-spacing: 2px; }
+  .cta-band p { color: rgba(255,255,255,0.8); max-width: 500px; margin: 0 auto 2rem; font-size: 1rem; }
+  .btn-white { background: white; color: var(--purple-dark); padding: 0.9rem 2.5rem; border-radius: 6px; font-weight: 700; text-decoration: none; font-size: 1rem; transition: all 0.2s; display: inline-block; }
+  .btn-white:hover { background: var(--accent); transform: translateY(-2px); }
+
+  .contact-strip { background: var(--dark2); padding: 3rem 2rem; display: flex; flex-wrap: wrap; gap: 2rem; justify-content: center; align-items: center; }
+  .contact-item { display: flex; align-items: center; gap: 1rem; }
+  .contact-icon { width: 48px; height: 48px; background: rgba(124,58,237,0.15); border: 1px solid rgba(124,58,237,0.3); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; }
+  .contact-item span { font-size: 0.8rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; display: block; }
+  .contact-item a, .contact-item strong { color: var(--white); font-weight: 600; text-decoration: none; font-size: 0.95rem; display: block; }
+  .contact-item a:hover { color: var(--purple-light); }
+
+  footer { background: var(--black); border-top: 1px solid rgba(124,58,237,0.15); padding: 2rem; text-align: center; }
+  footer p { color: var(--muted); font-size: 0.85rem; }
+  footer strong { color: var(--purple-light); }
+
+  @media (max-width: 768px) {
+    .stats-row { flex-direction: column; }
+    .stat-item { border-right: none; border-bottom: 1px solid rgba(124,58,237,0.1); }
+    .top-bar { font-size: 0.72rem; gap: 1rem; }
+    .process-cta { flex-direction: column; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <a href="tel:14753484119">📞 (475) 348-4119</a>
+  <span>|</span>
+  <a href="mailto:info@ossmosis.com">✉️ info@ossmosis.com</a>
+  <span>|</span>
+  <span>📍 Danbury, CT</span>
+</div>
+
+<nav>
+  <div class="logo" onclick="showPage('websites')">OSS<span>M</span>OSIS</div>
+  <div class="nav-pages">
+    <button class="nav-page-btn active" id="nav-websites" onclick="showPage('websites')">💻 Websites</button>
+    <button class="nav-page-btn" id="nav-carwraps" onclick="showPage('carwraps')">🚗 Car Wraps</button>
+    <button class="nav-page-btn" id="nav-marketing" onclick="showPage('marketing')">📱 Marketing Digital</button>
+    <button class="nav-page-btn" id="nav-portfolio" onclick="showPage('portfolio')">🎯 Portafolio</button>
+  </div>
+  <div class="nav-mobile">
+    <button class="nav-mobile-btn active" id="mob-websites" onclick="showPage('websites')">Web</button>
+    <button class="nav-mobile-btn" id="mob-carwraps" onclick="showPage('carwraps')">Wraps</button>
+    <button class="nav-mobile-btn" id="mob-marketing" onclick="showPage('marketing')">Mktg</button>
+    <button class="nav-mobile-btn" id="mob-portfolio" onclick="showPage('portfolio')">Portfolio</button>
+  </div>
+  <a href="tel:14753484119" class="nav-cta">📞 Llamar</a>
+</nav>
+
+<!-- PAGE: WEBSITES -->
+<div class="page active" id="page-websites">
+  <div class="hero">
+    <div class="container">
+      <div class="hero-tag">💻 Diseño Web Profesional</div>
+      <h1>Deja de Pagar<br><span>Demasiado</span><br>por tu Website</h1>
+      <p>Websites profesionales, rápidos y que convierten visitas en clientes — sin mensualidades exageradas ni contratos eternos. Danbury, CT.</p>
+      <div class="hero-btns">
+        <a href="tel:14753484119" class="btn-primary">🚀 Quiero mi Website</a>
+        <button onclick="showPage('portfolio')" class="btn-outline">Ver Portafolio</button>
+      </div>
+    </div>
+  </div>
+  <section class="bg-alt">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag">¿Por qué Ossmosis?</div>
+        <h2 class="section-title">No Somos Una Agencia Más</h2>
+        <p class="section-subtitle">Mientras otras agencias te cobran miles por un template de WordPress, nosotros te entregamos un sitio hecho a medida que trabaja para ti 24/7.</p>
+      </div>
+      <div class="why-grid">
+        <div class="why-card"><div class="why-icon">⚡</div><h3>Entrega en 7 Días</h3><p>Nada de esperar meses. Tu sitio listo y funcionando en una semana, sin excusas.</p></div>
+        <div class="why-card"><div class="why-icon">💰</div><h3>Precios Transparentes</h3><p>Sin costos ocultos, sin mensualidades sorpresa. Pagas lo acordado, punto.</p></div>
+        <div class="why-card"><div class="why-icon">📱</div><h3>100% Mobile-First</h3><p>El 80% de tus clientes llegan desde su celular. Tu sitio se verá perfecto en cualquier dispositivo.</p></div>
+        <div class="why-card"><div class="why-icon">🔍</div><h3>SEO Incluido</h3><p>Optimizamos tu sitio para que Google te encuentre. Más visibilidad, más clientes, sin pagar extra.</p></div>
+        <div class="why-card"><div class="why-icon">🛠️</div><h3>Soporte Real</h3><p>Somos un equipo local en Danbury, CT. Nos llamas y te respondemos, sin call centers ni tickets.</p></div>
+        <div class="why-card"><div class="why-icon">🎨</div><h3>Diseño Único</h3><p>Tu negocio no es igual a otro, tu website tampoco debería serlo. Diseños 100% personalizados.</p></div>
+      </div>
+    </div>
+  </section>
+  <section>
+    <div class="container">
+      <div class="stats-row">
+        <div class="stat-item"><div class="stat-num">50+</div><div class="stat-label">Websites Entregados</div></div>
+        <div class="stat-item"><div class="stat-num">7</div><div class="stat-label">Días de Entrega</div></div>
+        <div class="stat-item"><div class="stat-num">100%</div><div class="stat-label">Clientes Satisfechos</div></div>
+        <div class="stat-item"><div class="stat-num">CT</div><div class="stat-label">Basados en Danbury</div></div>
+      </div>
+    </div>
+  </section>
+  <section class="bg-alt">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag">Nuestros Planes</div>
+        <h2 class="section-title">Elige el Plan que Necesitas</h2>
+        <p class="section-subtitle">Sin contratos anuales forzados. Sitios que realmente convierten, a precios que tienen sentido para tu negocio.</p>
+      </div>
+      <div class="pricing-grid">
+        <div class="plan-card">
+          <div class="plan-name">Plan Básico</div>
+          <div class="plan-price">$499</div>
+          <div class="plan-desc">Perfecto para negocios que están comenzando y necesitan presencia digital profesional.</div>
+          <ul class="plan-features">
+            <li>Hasta 3 páginas</li>
+            <li>Diseño mobile-friendly</li>
+            <li>Formulario de contacto</li>
+            <li>SEO básico</li>
+            <li>Entrega en 7 días</li>
+            <li class="no">Integración Google Maps</li>
+            <li class="no">E-commerce</li>
+            <li class="no">Animaciones avanzadas</li>
+            <li class="no">Blog integrado</li>
+            <li class="maint">Mantenimiento mensual: $30/mes</li>
+          </ul>
+          <a href="tel:14753484119" class="plan-btn">Comenzar Ahora →</a>
+        </div>
+        <div class="plan-card featured">
+          <div class="featured-badge">⭐ Más Popular</div>
+          <div class="plan-name">Plan Intermedio</div>
+          <div class="plan-price">$899</div>
+          <div class="plan-desc">Para negocios listos para crecer con un sitio completo, rápido y con más funcionalidades.</div>
+          <ul class="plan-features">
+            <li>Hasta 6 páginas</li>
+            <li>Diseño 100% personalizado</li>
+            <li>Formulario + WhatsApp directo</li>
+            <li>Integración Google Maps</li>
+            <li>Galería / Portafolio</li>
+            <li>SEO avanzado</li>
+            <li>Google Analytics</li>
+            <li>Animaciones profesionales</li>
+            <li class="no">Tienda online</li>
+            <li class="maint">Mantenimiento mensual: $30/mes</li>
+          </ul>
+          <a href="tel:14753484119" class="plan-btn">¡Lo Quiero! →</a>
+        </div>
+        <div class="plan-card">
+          <div class="plan-name">Plan Profesional</div>
+          <div class="plan-price">$1,499</div>
+          <div class="plan-desc">La solución completa para empresas que quieren dominar su mercado en línea.</div>
+          <ul class="plan-features">
+            <li>Hasta 8 páginas</li>
+            <li>Diseño premium con branding</li>
+            <li>E-commerce / Tienda online</li>
+            <li>Sistema de reservas online</li>
+            <li>SEO completo + Google Ads setup</li>
+            <li>Integración redes sociales</li>
+            <li>Capacitación incluida</li>
+            <li>Soporte prioritario 3 meses</li>
+            <li class="maint">Mantenimiento mensual: $30/mes</li>
+          </ul>
+          <a href="tel:14753484119" class="plan-btn">Hablar con un Experto →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section>
+    <div class="container">
+      <div class="section-header"><div class="section-tag">Proceso</div><h2 class="section-title">¿Cómo Funciona?</h2></div>
+      <div class="process-steps" style="background:var(--dark2); border:1px solid rgba(124,58,237,0.1); border-radius:16px 16px 0 0;">
+        <div class="process-step"><div class="step-num">01</div><div class="step-icon">📞</div><h3>Consulta Gratis</h3><p>Hablamos de tu negocio y qué necesitas en tu sitio web.</p></div>
+        <div class="process-step"><div class="step-num">02</div><div class="step-icon">🎨</div><h3>Diseño y Aprobación</h3><p>Te mostramos el diseño antes de construir. Nada se hace sin tu aprobación.</p></div>
+        <div class="process-step"><div class="step-num">03</div><div class="step-icon">⚙️</div><h3>Desarrollo</h3><p>Construimos tu sitio con los más altos estándares de velocidad y SEO.</p></div>
+        <div class="process-step"><div class="step-num">04</div><div class="step-icon">🚀</div><h3>Lanzamiento</h3><p>Tu sitio en vivo en 7 días. Listo para recibir clientes.</p></div>
+      </div>
+      <div class="process-cta">
+        <div class="process-cta-text"><h3>¿Listo para Comenzar?</h3><p>Consulta gratis, sin compromiso. Tu website en 7 días o menos.</p></div>
+        <a href="tel:14753484119" class="process-cta-btn">📞 Llamar Ahora: (475) 348-4119</a>
+      </div>
+    </div>
+  </section>
+  <section class="bg-alt">
+    <div class="container">
+      <div class="section-header"><div class="section-tag">Testimonios</div><h2 class="section-title">Lo Que Dicen Nuestros Clientes</h2></div>
+      <div class="testi-grid">
+        <div class="testi-card"><div class="stars">★★★★★</div><p>"Antes pagaba $200 al mes por un sitio que nadie encontraba. Ossmosis me hizo uno mejor por una fracción del precio y ya tengo clientes llegando por Google."</p><div class="testi-author"><div class="testi-avatar">JR</div><div><div class="testi-name">Juan Rodriguez</div><div class="testi-biz">Contratista General, CT</div></div></div></div>
+        <div class="testi-card"><div class="stars">★★★★★</div><p>"Súper profesional y rápido. Me entregaron el sitio en exactamente una semana y quedó mejor de lo que esperaba. 100% recomendado."</p><div class="testi-author"><div class="testi-avatar">ML</div><div><div class="testi-name">Maria López</div><div class="testi-biz">Restaurante, Danbury CT</div></div></div></div>
+        <div class="testi-card"><div class="stars">★★★★★</div><p>"Llevaba años con un sitio viejo y feo. Ossmosis lo transformó completamente. Ahora mis clientes me dicen que se ven muy profesionales."</p><div class="testi-author"><div class="testi-avatar">AC</div><div><div class="testi-name">Andrés Cruz</div><div class="testi-biz">Barbería, Waterbury CT</div></div></div></div>
+      </div>
+    </div>
+  </section>
+  <div class="cta-band"><div class="container"><h2>¿Listo para Tener el Website que tu Negocio Merece?</h2><p>Consulta gratis, sin compromiso. Hablemos hoy mismo.</p><a href="tel:14753484119" class="btn-white">📞 Llamar: (475) 348-4119</a></div></div>
+  <div class="contact-strip">
+    <div class="contact-item"><div class="contact-icon">📞</div><div><span>Teléfono</span><a href="tel:14753484119">(475) 348-4119</a></div></div>
+    <div class="contact-item"><div class="contact-icon">✉️</div><div><span>Email</span><a href="mailto:info@ossmosis.com">info@ossmosis.com</a></div></div>
+    <div class="contact-item"><div class="contact-icon">📍</div><div><span>Ubicación</span><strong>Danbury, CT</strong></div></div>
+  </div>
+  <footer><p>© 2025 <strong>Ossmosis Marketing</strong> — Danbury, Connecticut. Todos los derechos reservados.</p></footer>
+</div>
+
+<!-- PAGE: CAR WRAPS -->
+<div class="page" id="page-carwraps">
+  <div class="hero">
+    <div class="container">
+      <div class="hero-tag">🚗 Car Wraps Connecticut</div>
+      <h1>Convierte tu Vehículo en una<br><span>Máquina de Ventas</span></h1>
+      <p>Vinilo fundido 3M™ de alta durabilidad. Diseños que generan miles de impresiones diarias y proyectan profesionalismo en cada kilómetro. Danbury, CT.</p>
+      <div class="hero-btns">
+        <a href="tel:14753484119" class="btn-primary">🚗 Cotizar mi Wrap</a>
+        <a href="mailto:info@ossmosis.com" class="btn-outline">Enviar Fotos de mi Vehículo</a>
+      </div>
+    </div>
+  </div>
+  <section class="bg-alt">
+    <div class="container">
+      <div class="section-header"><div class="section-tag">El Poder del Car Wrap</div><h2 class="section-title">Tu Vehículo Trabaja las 24 Horas</h2><p class="section-subtitle">Un vehículo rotulado genera hasta 70,000 impresiones diarias. Es la forma más económica y efectiva de publicidad local para tu negocio.</p></div>
+      <div class="why-grid">
+        <div class="why-card"><div class="why-icon">👁️</div><h3>70,000 Impresiones/Día</h3><p>Tu logo frente a miles de personas cada vez que conduces. Publicidad móvil que nunca descansa.</p></div>
+        <div class="why-card"><div class="why-icon">🛡️</div><h3>Protege tu Pintura</h3><p>El vinilo actúa como capa protectora contra rayones, UV y el clima de New England.</p></div>
+        <div class="why-card"><div class="why-icon">💵</div><h3>Mejor ROI en Marketing</h3><p>Costo por impresión más bajo que cualquier otro medio. Pagas una vez y publicitas por años.</p></div>
+        <div class="why-card"><div class="why-icon">✂️</div><h3>100% Reversible</h3><p>¿Cambias de marca? El vinilo se remueve sin dañar la pintura original de tu vehículo.</p></div>
+        <div class="why-card"><div class="why-icon">☀️</div><h3>Resistente al Clima</h3><p>Materiales certificados para resistir el sol, lluvia, nieve y temperaturas extremas de Connecticut.</p></div>
+        <div class="why-card"><div class="why-icon">⚡</div><h3>Instalación Rápida</h3><p>La mayoría de los wraps se instalan en 1-3 días. Tu flota de vuelta en las calles rápidamente.</p></div>
+      </div>
+    </div>
+  </section>
+  <section>
+    <div class="container">
+      <div class="section-header"><div class="section-tag">Tipos de Wrap</div><h2 class="section-title">Elige el Wrap Ideal para tu Negocio</h2><p class="section-subtitle">Desde lettering básico hasta cobertura total, tenemos la solución perfecta para cada presupuesto.</p></div>
+      <div class="wrap-grid">
+        <div class="wrap-card"><div class="wrap-img basic">🔤</div><div class="wrap-body"><div class="wrap-badge">Nivel 1</div><h3>Wrap Básico</h3><p>Lettering de vinilo recortado con tu logo, datos de contacto y tipografía corporativa.</p><ul class="wrap-includes"><li>Logo + nombre del negocio</li><li>Teléfono y web</li><li>Vinilo recortado premium</li><li>Perfecto para flotas grandes</li></ul></div></div>
+        <div class="wrap-card"><div class="wrap-img partial">🎨</div><div class="wrap-body"><div class="wrap-badge">Nivel 2</div><h3>Wrap Parcial</h3><p>Cubre áreas estratégicas del vehículo. Gráficos de alto contraste que llaman la atención.</p><ul class="wrap-includes"><li>30-60% de cobertura</li><li>Gráficos de alto impacto</li><li>QR codes incluidos</li><li>Diseño personalizado</li></ul></div></div>
+        <div class="wrap-card"><div class="wrap-img full">🚐</div><div class="wrap-body"><div class="wrap-badge">Nivel 3</div><h3>Wrap Full</h3><p>Cobertura integral de capó, laterales y portón trasero. Máxima visibilidad con protección total.</p><ul class="wrap-includes"><li>Cobertura completa</li><li>Vinilo fundido 3M™</li><li>Laminado anti-UV</li><li>Garantía incluida</li></ul></div></div>
+        <div class="wrap-card"><div class="wrap-img deluxe">✨</div><div class="wrap-body"><div class="wrap-badge">Nivel 4 — Premium</div><h3>Wrap Deluxe</h3><p>Full wrap con efectos cromados, mate, metálicos o acabados especiales.</p><ul class="wrap-includes"><li>Todo lo del Full Wrap</li><li>Techo y bumpers incluidos</li><li>Acabados: cromo, mate, glitter</li><li>Diseño 3D y efectos premium</li></ul></div></div>
+      </div>
+      <div class="wrap-table-wrap">
+        <h3 style="color:var(--white); font-family:'Bebas Neue',sans-serif; font-size:1.8rem; letter-spacing:2px; margin-bottom:1.5rem; text-align:center;">Comparativa de Planes</h3>
+        <table class="wrap-table">
+          <thead><tr><th>Característica</th><th>Básico</th><th>Parcial</th><th>Full</th><th>Deluxe</th></tr></thead>
+          <tbody>
+            <tr><td>Cobertura</td><td>Lettering</td><td>30-60%</td><td>90%</td><td class="plan-col">100%</td></tr>
+            <tr><td>Material</td><td>Vinilo recortado</td><td>Vinilo impreso</td><td>3M™ Fundido</td><td class="plan-col">3M™ Premium</td></tr>
+            <tr><td>Diseño personalizado</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td></tr>
+            <tr><td>Protección de pintura</td><td class="cross">✗</td><td class="check">Parcial</td><td class="check">✓</td><td class="check">✓</td></tr>
+            <tr><td>QR Code / WhatsApp</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td></tr>
+            <tr><td>Acabados especiales</td><td class="cross">✗</td><td class="cross">✗</td><td class="cross">✗</td><td class="check">✓</td></tr>
+            <tr><td>Techo y bumpers</td><td class="cross">✗</td><td class="cross">✗</td><td class="cross">✗</td><td class="check">✓</td></tr>
+            <tr><td>Garantía</td><td>1 año</td><td>2 años</td><td>3 años</td><td class="plan-col">5 años</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+  <section class="bg-alt">
+    <div class="container">
+      <div class="section-header"><div class="section-tag">Vehículos</div><h2 class="section-title">Rotulamos Todo Tipo de Vehículo</h2></div>
+      <div class="why-grid">
+        <div class="why-card"><div class="why-icon">🚐</div><h3>Vans de Reparto</h3><p>Ford Transit, Sprinter, Ram ProMaster. El clásico de los contratistas y negocios de servicio.</p></div>
+        <div class="why-card"><div class="why-icon">🛻</div><h3>Pick-ups y Box Trucks</h3><p>F-150, Silverado, RAM. Ideales para contratistas de construcción, plomería y electricidad.</p></div>
+        <div class="why-card"><div class="why-icon">🏢</div><h3>Flotas Corporativas</h3><p>Precios especiales para flotas de 3 o más vehículos. Uniformidad de marca garantizada.</p></div>
+        <div class="why-card"><div class="why-icon">🍔</div><h3>Food Trucks</h3><p>Diseños llamativos que hacen que tu food truck sea imposible de ignorar.</p></div>
+      </div>
+    </div>
+  </section>
+  <div class="cta-band"><div class="container"><h2>¿Tu Vehículo Todavía No Está Trabajando para Ti?</h2><p>Solicita tu cotización gratis hoy. Enviamos diseño de muestra sin costo.</p><a href="tel:14753484119" class="btn-white">📞 Cotización Gratis: (475) 348-4119</a></div></div>
+  <div class="contact-strip">
+    <div class="contact-item"><div class="contact-icon">📞</div><div><span>Teléfono</span><a href="tel:14753484119">(475) 348-4119</a></div></div>
+    <div class="contact-item"><div class="contact-icon">✉️</div><div><span>Email</span><a href="mailto:info@ossmosis.com">info@ossmosis.com</a></div></div>
+    <div class="contact-item"><div class="contact-icon">📍</div><div><span>Ubicación</span><strong>Danbury, CT</strong></div></div>
+  </div>
+  <footer><p>© 2025 <strong>Ossmosis Marketing</strong> — Danbury, Connecticut. Todos los derechos reservados.</p></footer>
+</div>
+
+<!-- PAGE: MARKETING DIGITAL -->
+<div class="page" id="page-marketing">
+  <div class="hero">
+    <div class="container">
+      <div class="hero-tag">📱 Marketing Digital</div>
+      <h1>Contenido que<br><span>Vende</span> por Ti</h1>
+      <p>Videos profesionales, fotografía y estrategia digital para restaurantes, barberías, tiendas y más. Haz que tu negocio sea imposible de ignorar.</p>
+      <div class="hero-btns">
+        <a href="tel:14753484119" class="btn-primary">📲 Hablar con un Experto</a>
+        <button onclick="showPage('portfolio')" class="btn-outline">Ver Trabajos</button>
+      </div>
+    </div>
+  </div>
+  <section class="bg-alt">
+    <div class="container">
+      <div class="section-header"><div class="section-tag">¿Por qué Contenido Profesional?</div><h2 class="section-title">El Contenido Mediocre Cuesta Clientes</h2><p class="section-subtitle">En redes sociales tienes menos de 3 segundos para captar la atención. El contenido amateur aleja a tus clientes antes de que lean tu nombre.</p></div>
+      <div class="why-grid">
+        <div class="why-card"><div class="why-icon">🎬</div><h3>Videos que Convierten</h3><p>Producción cinematográfica para tu negocio. Reels, TikToks y anuncios que la gente no puede dejar de ver.</p></div>
+        <div class="why-card"><div class="why-icon">📸</div><h3>Fotografía Profesional</h3><p>Imágenes que hacen que tu comida, servicio o producto se vea irresistible en Instagram y Google.</p></div>
+        <div class="why-card"><div class="why-icon">📊</div><h3>Estrategia con Resultados</h3><p>No publicamos por publicar. Cada pieza de contenido tiene un objetivo: más clientes.</p></div>
+        <div class="why-card"><div class="why-icon">🏆</div><h3>Conocemos tu Industria</h3><p>Restaurantes, barberías, contratistas, tiendas... tenemos experiencia real en cada sector.</p></div>
+        <div class="why-card"><div class="why-icon">🔄</div><h3>Contenido Consistente</h3><p>Paquetes mensuales para que nunca te quedes sin contenido fresco para tus redes sociales.</p></div>
+        <div class="why-card"><div class="why-icon">🌎</div><h3>Inglés y Español</h3><p>Llegamos a tu comunidad hispana y al mercado anglosajón. Doble alcance, doble oportunidad.</p></div>
+      </div>
+    </div>
+  </section>
+  <section>
+    <div class="container">
+      <div class="section-header"><div class="section-tag">Videos Profesionales</div><h2 class="section-title">Mira Lo que Hacemos por Nuestros Clientes</h2><p class="section-subtitle">Producción completa: guión, grabación, edición y entrega en formatos listos para publicar.</p></div>
+      <div class="video-grid">
+        <div class="video-card"><div class="video-thumb rest"><div class="play-btn">▶</div><div class="video-label">🍽️ RESTAURANTE</div></div><div class="video-info"><h3>Video Promo — Restaurante Latino</h3><p>Reel para redes sociales mostrando ambiente, platillos y experiencia del cliente.</p></div></div>
+        <div class="video-card"><div class="video-thumb barber"><div class="play-btn">▶</div><div class="video-label">✂️ BARBERÍA</div></div><div class="video-info"><h3>Contenido Mensual — Barbería</h3><p>Pack de 12 videos y fotos mensuales: transformaciones, ambiente y servicios.</p></div></div>
+        <div class="video-card"><div class="video-thumb retail"><div class="play-btn">▶</div><div class="video-label">🏪 TIENDA</div></div><div class="video-info"><h3>Anuncio Pago — Retail</h3><p>Video de 15 segundos optimizado para Meta Ads con alta tasa de conversión.</p></div></div>
+        <div class="video-card"><div class="video-thumb event"><div class="play-btn">▶</div><div class="video-label">🎉 EVENTO</div></div><div class="video-info"><h3>Cobertura de Evento — Grand Opening</h3><p>Highlights profesional del evento con entrevistas y momentos clave.</p></div></div>
+      </div>
+    </div>
+  </section>
+  <section class="bg-alt">
+    <div class="container">
+      <div class="section-header"><div class="section-tag">Fotografía para Restaurantes</div><h2 class="section-title">Imágenes que Hacen Agua en la Boca</h2><p class="section-subtitle">La fotografía gastronómica profesional incrementa los pedidos en línea hasta un 30%.</p></div>
+      <div class="photo-grid">
+        <div class="photo-item r1"><div>🍝</div><div class="photo-overlay"></div></div>
+        <div class="photo-item r2"><div>🥩</div><div class="photo-overlay"></div></div>
+        <div class="photo-item r3"><div>🍣</div><div class="photo-overlay"></div></div>
+        <div class="photo-item r4"><div>🍰</div><div class="photo-overlay"></div></div>
+        <div class="photo-item r5"><div>🌮</div><div class="photo-overlay"></div></div>
+        <div class="photo-item r6"><div>🍹</div><div class="photo-overlay"></div></div>
+      </div>
+      <p style="text-align:center; color:var(--muted); margin-top:1.5rem; font-size:0.9rem;">📌 Ejemplos ilustrativos — Reemplaza con tus fotos reales</p>
+    </div>
+  </section>
+  <section>
+    <div class="container">
+      <div class="section-header"><div class="section-tag">Paquetes</div><h2 class="section-title">Paquetes de Marketing Digital</h2></div>
+      <div class="pricing-grid">
+        <div class="plan-card">
+          <div class="plan-name">Starter</div>
+          <div class="plan-price">$299<span style="font-size:1rem;color:var(--muted);font-family:'Outfit',sans-serif;font-weight:400;">/mes</span></div>
+          <div class="plan-desc">Para negocios que quieren presencia constante en redes sin complicarse.</div>
+          <ul class="plan-features"><li>8 posts mensuales</li><li>2 Reels / Videos cortos</li><li>Diseño gráfico incluido</li><li>Copywriting en español/inglés</li><li>Publicación en 2 plataformas</li><li class="no">Fotografía profesional</li><li class="no">Ads pagados</li></ul>
+          <a href="tel:14753484119" class="plan-btn">Empezar →</a>
+        </div>
+        <div class="plan-card featured">
+          <div class="featured-badge">⭐ Más Popular</div>
+          <div class="plan-name">Growth</div>
+          <div class="plan-price">$599<span style="font-size:1rem;color:var(--muted);font-family:'Outfit',sans-serif;font-weight:400;">/mes</span></div>
+          <div class="plan-desc">Contenido + sesión de fotos mensual + estrategia de crecimiento.</div>
+          <ul class="plan-features"><li>16 posts mensuales</li><li>4 Videos / Reels profesionales</li><li>Sesión de fotografía mensual</li><li>Gestión de 3 plataformas</li><li>Respuesta a comentarios</li><li>Reporte mensual de resultados</li><li class="no">Ads pagados</li></ul>
+          <a href="tel:14753484119" class="plan-btn">¡Lo Quiero! →</a>
+        </div>
+        <div class="plan-card">
+          <div class="plan-name">Dominator</div>
+          <div class="plan-price">$999<span style="font-size:1rem;color:var(--muted);font-family:'Outfit',sans-serif;font-weight:400;">/mes</span></div>
+          <div class="plan-desc">Presencia total + publicidad pagada + estrategia completa de crecimiento.</div>
+          <ul class="plan-features"><li>Todo del plan Growth</li><li>Meta Ads + Google Ads</li><li>2 sesiones de foto/video</li><li>Email marketing</li><li>Estrategia personalizada</li><li>Reunión mensual de resultados</li><li>Account manager dedicado</li></ul>
+          <a href="tel:14753484119" class="plan-btn">Dominar mi Mercado →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="bg-alt">
+    <div class="container">
+      <div class="section-header"><div class="section-tag">Industrias</div><h2 class="section-title">Trabajamos con tu Industria</h2></div>
+      <div class="why-grid">
+        <div class="why-card"><div class="why-icon">🍽️</div><h3>Restaurantes & Cafés</h3><p>Menús en redes, fotos de comida irresistibles, promos del día y cobertura de eventos.</p></div>
+        <div class="why-card"><div class="why-icon">✂️</div><h3>Barberías & Salones</h3><p>Antes y después, transformaciones virales, videos de ambiente y sistema de citas online.</p></div>
+        <div class="why-card"><div class="why-icon">🔨</div><h3>Contratistas</h3><p>Fotos de proyectos terminados, videos de proceso y testimonios de clientes satisfechos.</p></div>
+        <div class="why-card"><div class="why-icon">🏪</div><h3>Tiendas & Retail</h3><p>Catálogo visual, llegadas de productos, ofertas y videos que convierten en ventas.</p></div>
+      </div>
+    </div>
+  </section>
+  <div class="cta-band"><div class="container"><h2>¿Tu Negocio Merece Más Atención?</h2><p>Hablemos de cómo llevar tu marketing al siguiente nivel.</p><a href="tel:14753484119" class="btn-white">📲 Llamar Ahora: (475) 348-4119</a></div></div>
+  <div class="contact-strip">
+    <div class="contact-item"><div class="contact-icon">📞</div><div><span>Teléfono</span><a href="tel:14753484119">(475) 348-4119</a></div></div>
+    <div class="contact-item"><div class="contact-icon">✉️</div><div><span>Email</span><a href="mailto:info@ossmosis.com">info@ossmosis.com</a></div></div>
+    <div class="contact-item"><div class="contact-icon">📍</div><div><span>Ubicación</span><strong>Danbury, CT</strong></div></div>
+  </div>
+  <footer><p>© 2025 <strong>Ossmosis Marketing</strong> — Danbury, Connecticut. Todos los derechos reservados.</p></footer>
+</div>
+
+<!-- PAGE: PORTFOLIO -->
+<div class="page" id="page-portfolio">
+  <div class="hero">
+    <div class="container">
+      <div class="hero-tag">🎯 Nuestro Trabajo</div>
+      <h1>Resultados que<br><span>Hablan</span> por Sí Solos</h1>
+      <p>Proyectos reales para negocios reales en Connecticut y más allá. Websites, car wraps y marketing digital.</p>
+      <div class="hero-btns"><a href="tel:14753484119" class="btn-primary">🚀 Quiero un Proyecto Así</a></div>
+    </div>
+  </div>
+  <section>
+    <div class="container">
+      <div class="portfolio-tabs">
+        <button class="tab-btn active" onclick="filterPortfolio('all', this)">Todos</button>
+        <button class="tab-btn" onclick="filterPortfolio('web', this)">💻 Websites</button>
+        <button class="tab-btn" onclick="filterPortfolio('wrap', this)">🚗 Car Wraps</button>
+        <button class="tab-btn" onclick="filterPortfolio('mkt', this)">📱 Marketing Digital</button>
+      </div>
+      <div class="portfolio-grid">
+        <div class="portfolio-item" data-cat="web"><div class="portfolio-thumb pt-web">🍽️</div><div class="portfolio-info"><div class="portfolio-cat">💻 Website</div><h3>Restaurante La Familia</h3><p>Sitio con menú online, reservas y integración con Google Maps.</p></div></div>
+        <div class="portfolio-item" data-cat="web"><div class="portfolio-thumb pt-web">🔨</div><div class="portfolio-info"><div class="portfolio-cat">💻 Website</div><h3>Contratista Pro CT</h3><p>Landing page de alto impacto con formulario de cotización instantánea.</p></div></div>
+        <div class="portfolio-item" data-cat="web"><div class="portfolio-thumb pt-web">✂️</div><div class="portfolio-info"><div class="portfolio-cat">💻 Website</div><h3>Barbería Elite</h3><p>Sitio con sistema de citas online y galería de cortes integrada.</p></div></div>
+        <div class="portfolio-item" data-cat="web"><div class="portfolio-thumb pt-web">🏪</div><div class="portfolio-info"><div class="portfolio-cat">💻 Website</div><h3>Tienda Style CT</h3><p>E-commerce con catálogo de productos y pasarela de pago.</p></div></div>
+        <div class="portfolio-item" data-cat="wrap"><div class="portfolio-thumb pt-wrap">🚐</div><div class="portfolio-info"><div class="portfolio-cat">🚗 Car Wrap — Full</div><h3>HVAC Company</h3><p>Ford Transit con wrap full en morado y negro. Alta visibilidad en carretera.</p></div></div>
+        <div class="portfolio-item" data-cat="wrap"><div class="portfolio-thumb pt-wrap">🛻</div><div class="portfolio-info"><div class="portfolio-cat">🚗 Car Wrap — Parcial</div><h3>Plomería Express</h3><p>F-150 con wrap parcial y QR directo a WhatsApp Business.</p></div></div>
+        <div class="portfolio-item" data-cat="wrap"><div class="portfolio-thumb pt-wrap">🚚</div><div class="portfolio-info"><div class="portfolio-cat">🚗 Car Wrap — Básico</div><h3>Landscaping Co.</h3><p>Wrap básico para flota de 5 camionetas. Uniformidad de marca total.</p></div></div>
+        <div class="portfolio-item" data-cat="wrap"><div class="portfolio-thumb pt-wrap">🍔</div><div class="portfolio-info"><div class="portfolio-cat">🚗 Car Wrap — Deluxe</div><h3>Food Truck Sabor Latino</h3><p>Wrap Deluxe con efectos cromados y diseño de alta energía visual.</p></div></div>
+        <div class="portfolio-item" data-cat="mkt"><div class="portfolio-thumb pt-mkt">🎬</div><div class="portfolio-info"><div class="portfolio-cat">📱 Marketing Digital</div><h3>Campaña de Reels — El Rincón</h3><p>12 reels mensuales para restaurante. +400% en seguidores en 3 meses.</p></div></div>
+        <div class="portfolio-item" data-cat="mkt"><div class="portfolio-thumb pt-mkt">📸</div><div class="portfolio-info"><div class="portfolio-cat">📱 Fotografía</div><h3>Sesión Gastronómica — Cocina Mx</h3><p>60 fotos profesionales de platillos para menú web e Instagram.</p></div></div>
+        <div class="portfolio-item" data-cat="mkt"><div class="portfolio-thumb pt-mkt">📢</div><div class="portfolio-info"><div class="portfolio-cat">📱 Meta Ads</div><h3>Campaña Pagada — Barbería</h3><p>Anuncios de Facebook/Instagram. $3.20 costo por cliente nuevo.</p></div></div>
+        <div class="portfolio-item" data-cat="mkt"><div class="portfolio-thumb pt-mkt">🎉</div><div class="portfolio-info"><div class="portfolio-cat">📱 Video</div><h3>Grand Opening — Panadería</h3><p>Video de evento completo: highlights, entrevistas y cobertura en redes.</p></div></div>
+      </div>
+    </div>
+  </section>
+  <section class="bg-alt">
+    <div class="container" style="text-align:center">
+      <div class="section-tag">¿Listo para el Siguiente Paso?</div>
+      <h2 class="section-title">Tu Proyecto Podría Estar Aquí Arriba</h2>
+      <p class="section-subtitle" style="margin: 1rem auto 2.5rem;">Únete a los negocios de Connecticut que ya están creciendo con Ossmosis Marketing.</p>
+      <div class="hero-btns">
+        <a href="tel:14753484119" class="btn-primary">📞 (475) 348-4119</a>
+        <a href="mailto:info@ossmosis.com" class="btn-outline">✉️ info@ossmosis.com</a>
+      </div>
+    </div>
+  </section>
+  <div class="contact-strip">
+    <div class="contact-item"><div class="contact-icon">📞</div><div><span>Teléfono</span><a href="tel:14753484119">(475) 348-4119</a></div></div>
+    <div class="contact-item"><div class="contact-icon">✉️</div><div><span>Email</span><a href="mailto:info@ossmosis.com">info@ossmosis.com</a></div></div>
+    <div class="contact-item"><div class="contact-icon">📍</div><div><span>Ubicación</span><strong>Danbury, CT</strong></div></div>
+  </div>
+  <footer><p>© 2025 <strong>Ossmosis Marketing</strong> — Danbury, Connecticut. Todos los derechos reservados.</p></footer>
+</div>
+
+<script>
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  ['nav-websites','nav-carwraps','nav-marketing','nav-portfolio'].forEach(id => { const el = document.getElementById(id); if(el) el.classList.remove('active'); });
+  ['mob-websites','mob-carwraps','mob-marketing','mob-portfolio'].forEach(id => { const el = document.getElementById(id); if(el) el.classList.remove('active'); });
+  document.getElementById('page-' + name).classList.add('active');
+  const n = document.getElementById('nav-' + name); if(n) n.classList.add('active');
+  const m = document.getElementById('mob-' + name); if(m) m.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function filterPortfolio(cat, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.portfolio-item').forEach(item => {
+    item.style.display = (cat === 'all' || item.dataset.cat === cat) ? 'block' : 'none';
+  });
+}
+</script>
+</body>
+</html>
